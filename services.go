@@ -148,7 +148,7 @@ func NewNrcServices() Services {
 /*
  * Send HTTP GET request
  */
-func (h *Services) GetServices(url, endpoint string) (e error) {
+func (h *Services) GetServices(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -162,9 +162,22 @@ func (h *Services) GetServices(url, endpoint string) (e error) {
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")
 	}
+	for strings.HasSuffix(endpoint, "/") {
+		url = strings.TrimSuffix(endpoint, "/")
+	}
+
+	// Construct url, http://1.2.3.4/rest/show/hosts?json={"folder":"local",...}
+	fullUrl := url + "/" + endpoint + "?json={\"folder\":\"" + folder + "\""
+	dataStr := FormatData(data, "services")
+	if dataStr != "" {
+		fullUrl += "," + dataStr
+	}
+	fullUrl += "}"
+
+	//fmt.Printf("URL=%s\n", fullUrl)
 
 	//fmt.Printf("%s\n", url+"/"+endpoint)
-	resp, err := client.Get(url + "/" + endpoint)
+	resp, err := client.Get(fullUrl)
 	if err != nil {
 		txt := fmt.Sprintf("Could not send REST request ('%s').", err.Error())
 		return HttpError{txt}
