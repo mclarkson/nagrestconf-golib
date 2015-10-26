@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -63,6 +64,36 @@ type serviceset struct {
 
 type Servicesets struct {
 	servicesets []serviceset
+}
+
+func ServicesetsFields() (arr []string) {
+
+	h := &serviceset{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func ServicesetsFieldsJson() (s string) {
+
+	f := ServicesetsFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Servicesets) FilterServicesets(filter string) {

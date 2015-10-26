@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -27,6 +28,36 @@ type hostesc struct {
 
 type Hostesc struct {
 	hostesc []hostesc
+}
+
+func HostescFields() (arr []string) {
+
+	h := &hostesc{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func HostescFieldsJson() (s string) {
+
+	f := HostescFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Hostesc) FilterHostesc(filter string) {

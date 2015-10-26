@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -60,6 +61,36 @@ type servicetemplate struct {
 
 type Servicetemplates struct {
 	servicetemplates []servicetemplate
+}
+
+func ServicetemplatesFields() (arr []string) {
+
+	h := &servicetemplate{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func ServicetemplatesFieldsJson() (s string) {
+
+	f := ServicetemplatesFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Servicetemplates) FilterServicetemplates(filter string) {

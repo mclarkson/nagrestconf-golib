@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -28,6 +29,36 @@ type serviceesc struct {
 
 type Serviceesc struct {
 	serviceesc []serviceesc
+}
+
+func ServiceescFields() (arr []string) {
+
+	h := &serviceesc{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func ServiceescFieldsJson() (s string) {
+
+	f := ServiceescFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Serviceesc) FilterServiceesc(filter string) {

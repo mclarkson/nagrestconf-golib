@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -26,6 +27,36 @@ type hostdep struct {
 
 type Hostdeps struct {
 	hostdeps []hostdep
+}
+
+func HostdepsFields() (arr []string) {
+
+	h := &hostdep{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func HostdepsFieldsJson() (s string) {
+
+	f := HostdepsFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Hostdeps) FilterHostdeps(filter string) {

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -64,6 +65,36 @@ type host struct {
 
 type Hosts struct {
 	hosts []host
+}
+
+func HostsFields() (arr []string) {
+
+	h := &host{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func HostsFieldsJson() (s string) {
+
+	f := HostsFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Hosts) FilterHosts(filter string) {
@@ -346,7 +377,7 @@ func (h Hosts) PostHosts(url, endpoint, folder, data string) (e error) {
 	dataStr += "}"
 
 	//fmt.Printf("URL=%s\n", fullUrl)
-	//fmt.Printf("Data=%s\n", dataStr)
+	fmt.Printf("Data=%s\n", dataStr)
 
 	buf := bytes.NewBuffer([]byte(dataStr))
 

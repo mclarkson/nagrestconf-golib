@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -56,6 +57,36 @@ type hosttemplate struct {
 
 type Hosttemplates struct {
 	hosttemplates []hosttemplate
+}
+
+func HosttemplatesFields() (arr []string) {
+
+	h := &hosttemplate{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func HosttemplatesFieldsJson() (s string) {
+
+	f := HosttemplatesFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Hosttemplates) FilterHosttemplates(filter string) {

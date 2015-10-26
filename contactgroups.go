@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -21,6 +22,36 @@ type contactgroup struct {
 
 type Contactgroups struct {
 	contactgroups []contactgroup
+}
+
+func ContactgroupsFields() (arr []string) {
+
+	h := &contactgroup{}
+
+	n := reflect.TypeOf(h).Elem().NumField()
+	for i := 0; i < n; i++ {
+		f := reflect.TypeOf(h).Elem().Field(i)
+		arr = append(arr, f.Name)
+	}
+
+	sort.Strings(arr)
+
+	return arr
+}
+
+func ContactgroupsFieldsJson() (s string) {
+
+	f := ContactgroupsFields()
+
+	s = "["
+	c := ""
+	for _, j := range f {
+		s += c + `"` + j + `"`
+		c = ","
+	}
+	s += "]"
+
+	return s
 }
 
 func (h *Contactgroups) FilterContactgroups(filter string) {
