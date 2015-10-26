@@ -163,7 +163,11 @@ func (h *Hostdeps) GetHostdeps(url, endpoint, folder, data string) (e error) {
 
 	// Construct url, http://1.2.3.4/rest/show/hosts?json={"folder":"local",...}
 	fullUrl := url + "/" + endpoint + "?json={\"folder\":\"" + folder + "\""
-	dataStr := FormatData(data, "hostdeps")
+	dataStr, err := FormatData(data, "services")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataStr != "" {
 		fullUrl += "," + dataStr
 	}
@@ -256,7 +260,11 @@ func (h Hostdeps) PostHostdeps(url, endpoint, folder, data string) (e error) {
 
 	// Format data
 	dataStr := "json={\"folder\":\"" + folder + "\""
-	dataInr := FormatData(data, "hostdeps")
+	dataInr, err := FormatData(data, "hostdeps")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataInr != "" {
 		dataStr += "," + dataInr
 	}

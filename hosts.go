@@ -201,7 +201,11 @@ func (h *Hosts) GetHosts(url, endpoint, folder, data string) (e error) {
 
 	// Construct url, http://1.2.3.4/rest/show/hosts?json={"folder":"local",...}
 	fullUrl := url + "/" + endpoint + "?json={\"folder\":\"" + folder + "\""
-	dataStr := FormatData(data, "hosts")
+	dataStr, err := FormatData(data, "services")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataStr != "" {
 		fullUrl += "," + dataStr
 	}
@@ -370,14 +374,18 @@ func (h Hosts) PostHosts(url, endpoint, folder, data string) (e error) {
 
 	// Format data
 	dataStr := "json={\"folder\":\"" + folder + "\""
-	dataInr := FormatData(data, "hosts")
+	dataInr, err := FormatData(data, "hosts")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataInr != "" {
 		dataStr += "," + dataInr
 	}
 	dataStr += "}"
 
 	//fmt.Printf("URL=%s\n", fullUrl)
-	fmt.Printf("Data=%s\n", dataStr)
+	//fmt.Printf("Data=%s\n", dataStr)
 
 	buf := bytes.NewBuffer([]byte(dataStr))
 

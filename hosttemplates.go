@@ -193,7 +193,11 @@ func (h *Hosttemplates) GetHosttemplates(url, endpoint, folder, data string) (e 
 
 	// Construct url, http://1.2.3.4/rest/show/hosts?json={"folder":"local",...}
 	fullUrl := url + "/" + endpoint + "?json={\"folder\":\"" + folder + "\""
-	dataStr := FormatData(data, "hosttemplates")
+	dataStr, err := FormatData(data, "services")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataStr != "" {
 		fullUrl += "," + dataStr
 	}
@@ -346,7 +350,11 @@ func (h Hosttemplates) PostHosttemplates(url, endpoint, folder, data string) (e 
 
 	// Format data
 	dataStr := "json={\"folder\":\"" + folder + "\""
-	dataInr := FormatData(data, "hosttemplates")
+	dataInr, err := FormatData(data, "hosttemplates")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataInr != "" {
 		dataStr += "," + dataInr
 	}

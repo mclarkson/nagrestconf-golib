@@ -162,7 +162,11 @@ func (h *Hostgroups) GetHostgroups(url, endpoint, folder, data string) (e error)
 
 	// Construct url, http://1.2.3.4/rest/show/hosts?json={"folder":"local",...}
 	fullUrl := url + "/" + endpoint + "?json={\"folder\":\"" + folder + "\""
-	dataStr := FormatData(data, "hostgroups")
+	dataStr, err := FormatData(data, "services")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataStr != "" {
 		fullUrl += "," + dataStr
 	}
@@ -253,7 +257,11 @@ func (h Hostgroups) PostHostgroups(url, endpoint, folder, data string) (e error)
 
 	// Format data
 	dataStr := "json={\"folder\":\"" + folder + "\""
-	dataInr := FormatData(data, "hostgroups")
+	dataInr, err := FormatData(data, "hostgroups")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataInr != "" {
 		dataStr += "," + dataInr
 	}

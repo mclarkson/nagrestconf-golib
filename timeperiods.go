@@ -160,7 +160,11 @@ func (h *Timeperiods) GetTimeperiods(url, endpoint, folder, data string) (e erro
 
 	// Construct url, http://1.2.3.4/rest/show/hosts?json={"folder":"local",...}
 	fullUrl := url + "/" + endpoint + "?json={\"folder\":\"" + folder + "\""
-	dataStr := FormatData(data, "timeperiods")
+	dataStr, err := FormatData(data, "services")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataStr != "" {
 		fullUrl += "," + dataStr
 	}
@@ -247,7 +251,11 @@ func (h Timeperiods) PostTimeperiods(url, endpoint, folder, data string) (e erro
 
 	// Format data
 	dataStr := "json={\"folder\":\"" + folder + "\""
-	dataInr := FormatData(data, "timeperiods")
+	dataInr, err := FormatData(data, "timeperiods")
+	if err != nil {
+		txt := fmt.Sprintf("Could not format data. Check the '-d' option.")
+		return HttpError{txt}
+	}
 	if dataInr != "" {
 		dataStr += "," + dataInr
 	}
