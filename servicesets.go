@@ -66,6 +66,10 @@ type Servicesets struct {
 	servicesets []serviceset
 }
 
+func ServicesetsRequiredFields() []string {
+	return []string{"name", "template", "command", "svcdesc"}
+}
+
 func ServicesetsFields() (arr []string) {
 
 	h := &serviceset{}

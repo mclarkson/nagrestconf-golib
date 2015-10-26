@@ -23,6 +23,10 @@ type Commands struct {
 	commands []command
 }
 
+func CommandsRequiredFields() []string {
+	return []string{"name", "command"}
+}
+
 func CommandsFields() (arr []string) {
 
 	h := &command{}

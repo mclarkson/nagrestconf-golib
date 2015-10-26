@@ -66,6 +66,10 @@ type Services struct {
 	services []service
 }
 
+func ServicesRequiredFields() []string {
+	return []string{"name", "template", "command", "svcdesc"}
+}
+
 func ServicesFields() (arr []string) {
 
 	h := &service{}

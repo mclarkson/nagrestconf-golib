@@ -44,6 +44,10 @@ type Contacts struct {
 	contacts []contact
 }
 
+func ContactsRequiredFields() []string {
+	return []string{"name", "alias", "svcnotifperiod", "svcnotifopts", "svcnotifcmds", "hstnotifperiod", "hstnotifopts", "hstnotifcmds"}
+}
+
 func ContactsFields() (arr []string) {
 
 	h := &contact{}

@@ -28,6 +28,10 @@ type Serviceextinfo struct {
 	serviceextinfo []serviceextinfo
 }
 
+func ServiceextinfoRequiredFields() []string {
+	return []string{}
+}
+
 func ServiceextinfoFields() (arr []string) {
 
 	h := &serviceextinfo{}

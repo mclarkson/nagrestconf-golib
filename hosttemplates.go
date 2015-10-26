@@ -59,6 +59,10 @@ type Hosttemplates struct {
 	hosttemplates []hosttemplate
 }
 
+func HosttemplatesRequiredFields() []string {
+	return []string{"name", "checkinterval", "retryinterval", "notifperiod", "checkperiod", "maxcheckattempts", "notifinterval"}
+}
+
 func HosttemplatesFields() (arr []string) {
 
 	h := &hosttemplate{}

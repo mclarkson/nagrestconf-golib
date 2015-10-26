@@ -31,6 +31,10 @@ type Servicedeps struct {
 	servicedeps []servicedep
 }
 
+func ServicedepsRequiredFields() []string {
+	return []string{}
+}
+
 func ServicedepsFields() (arr []string) {
 
 	h := &servicedep{}

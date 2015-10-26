@@ -30,6 +30,10 @@ type Hostesc struct {
 	hostesc []hostesc
 }
 
+func HostescRequiredFields() []string {
+	return []string{}
+}
+
 func HostescFields() (arr []string) {
 
 	h := &hostesc{}

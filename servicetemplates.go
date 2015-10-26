@@ -63,6 +63,10 @@ type Servicetemplates struct {
 	servicetemplates []servicetemplate
 }
 
+func ServicetemplatesRequiredFields() []string {
+	return []string{"name", "checkinterval", "retryinterval", "notifinterval", "notifperiod", "checkperiod", "maxcheckattempts"}
+}
+
 func ServicetemplatesFields() (arr []string) {
 
 	h := &servicetemplate{}

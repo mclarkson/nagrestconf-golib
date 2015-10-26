@@ -28,6 +28,10 @@ type Hostgroups struct {
 	hostgroups []hostgroup
 }
 
+func HostgroupsRequiredFields() []string {
+	return []string{"name", "alias"}
+}
+
 func HostgroupsFields() (arr []string) {
 
 	h := &hostgroup{}

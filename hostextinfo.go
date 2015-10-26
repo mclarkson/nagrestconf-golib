@@ -31,6 +31,10 @@ type Hostextinfo struct {
 	hostextinfo []hostextinfo
 }
 
+func HostextinfoRequiredFields() []string {
+	return []string{}
+}
+
 func HostextinfoFields() (arr []string) {
 
 	h := &hostextinfo{}

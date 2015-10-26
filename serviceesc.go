@@ -31,6 +31,10 @@ type Serviceesc struct {
 	serviceesc []serviceesc
 }
 
+func ServiceescRequiredFields() []string {
+	return []string{}
+}
+
 func ServiceescFields() (arr []string) {
 
 	h := &serviceesc{}

@@ -29,6 +29,10 @@ type Hostdeps struct {
 	hostdeps []hostdep
 }
 
+func HostdepsRequiredFields() []string {
+	return []string{}
+}
+
 func HostdepsFields() (arr []string) {
 
 	h := &hostdep{}

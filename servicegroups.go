@@ -28,6 +28,10 @@ type Servicegroups struct {
 	servicegroups []servicegroup
 }
 
+func ServicegroupsRequiredFields() []string {
+	return []string{"name", "alias"}
+}
+
 func ServicegroupsFields() (arr []string) {
 
 	h := &servicegroup{}

@@ -24,6 +24,10 @@ type Contactgroups struct {
 	contactgroups []contactgroup
 }
 
+func ContactgroupsRequiredFields() []string {
+	return []string{"name", "alias", "members"}
+}
+
 func ContactgroupsFields() (arr []string) {
 
 	h := &contactgroup{}

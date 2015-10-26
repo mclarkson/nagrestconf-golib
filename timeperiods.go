@@ -26,6 +26,10 @@ type Timeperiods struct {
 	timeperiods []timeperiod
 }
 
+func TimeperiodsRequiredFields() []string {
+	return []string{"name", "alias"}
+}
+
 func TimeperiodsFields() (arr []string) {
 
 	h := &timeperiod{}

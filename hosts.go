@@ -67,6 +67,10 @@ type Hosts struct {
 	hosts []host
 }
 
+func HostsRequiredFields() []string {
+	return []string{"name", "alias", "ipaddress", "template"}
+}
+
 func HostsFields() (arr []string) {
 
 	h := &host{}
