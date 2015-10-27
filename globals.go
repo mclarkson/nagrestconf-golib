@@ -16,3 +16,13 @@ type HttpError struct {
 func (e HttpError) Error() string {
 	return fmt.Sprintf("%s", e.details)
 }
+
+type NrcQuery interface {
+	RequiredFields() []string
+	Fields() []string
+	FieldsJson() string
+	Show(bool, string)
+	ShowJson(bool, bool, string)
+	Get(string, string, string, string) error
+	Post(string, string, string, string) error
+}

@@ -13,11 +13,23 @@ type output struct {
 	Output []string
 }
 
-func NewNrcCheck() output {
-	return output{}
+func NewNrcCheck() *output {
+	return &output{}
 }
 
-func (o output) ShowOutputJson(newline bool) {
+func (o output) RequiredFields() []string {
+	return []string{}
+}
+
+func (o *output) Fields() (arr []string) {
+	return arr
+}
+
+func (o output) FieldsJson() (s string) {
+	return s
+}
+
+func (o output) ShowJson(newline, brief bool, filter string) {
 
 	var nl = ""   // newline
 	var ind4 = "" // big indent
@@ -39,7 +51,8 @@ func (o output) ShowOutputJson(newline bool) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func (o output) ShowOutput() {
+func (o output) Show(brief bool, filter string) {
+
 	for _, j := range o.Output {
 		fmt.Printf("%s\n", j)
 	}
@@ -48,7 +61,7 @@ func (o output) ShowOutput() {
 /*
  * Send HTTP GET request
  */
-func (o *output) CheckNagiosConfig(url, endpoint, folder, data string) (e error) {
+func (o *output) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -113,4 +126,8 @@ func (o *output) CheckNagiosConfig(url, endpoint, folder, data string) (e error)
 
 		return nil
 	}
+}
+
+func (o output) Post(url, endpoint, folder, data string) (e error) {
+	return nil
 }

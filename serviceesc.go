@@ -31,17 +31,15 @@ type Serviceesc struct {
 	serviceesc []serviceesc
 }
 
-func ServiceescRequiredFields() []string {
+func (h Serviceesc) RequiredFields() []string {
 	return []string{}
 }
 
-func ServiceescFields() (arr []string) {
+func (h *Serviceesc) Fields() (arr []string) {
 
-	h := &serviceesc{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.serviceesc).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.serviceesc).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -50,9 +48,9 @@ func ServiceescFields() (arr []string) {
 	return arr
 }
 
-func ServiceescFieldsJson() (s string) {
+func (h Serviceesc) FieldsJson() (s string) {
 
-	f := ServiceescFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -65,7 +63,7 @@ func ServiceescFieldsJson() (s string) {
 	return s
 }
 
-func (h *Serviceesc) FilterServiceesc(filter string) {
+func (h *Serviceesc) filterServiceesc(filter string) {
 
 	f := NewFilter(filter)
 
@@ -102,10 +100,13 @@ func (h *Serviceesc) FilterServiceesc(filter string) {
 	h.serviceesc = newh
 }
 
-func (h Serviceesc) ShowServiceescJson(newline, brief bool, filter string) {
+func (h Serviceesc) Show(brief bool, filter string) {
+}
+
+func (h Serviceesc) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServiceesc(filter)
+		h.filterServiceesc(filter)
 	}
 
 	var nl = ""   // newline
@@ -142,14 +143,14 @@ func (h Serviceesc) ShowServiceescJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServiceesc() Serviceesc {
-	return Serviceesc{}
+func NewNrcServiceesc() *Serviceesc {
+	return &Serviceesc{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Serviceesc) GetServiceesc(url, endpoint, folder, data string) (e error) {
+func (h *Serviceesc) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -257,7 +258,7 @@ func (h *Serviceesc) GetServiceesc(url, endpoint, folder, data string) (e error)
 /*
  * Send HTTP POST request
  */
-func (h Serviceesc) PostServiceesc(url, endpoint, folder, data string) (e error) {
+func (h Serviceesc) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

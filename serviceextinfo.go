@@ -28,17 +28,15 @@ type Serviceextinfo struct {
 	serviceextinfo []serviceextinfo
 }
 
-func ServiceextinfoRequiredFields() []string {
+func (h Serviceextinfo) RequiredFields() []string {
 	return []string{}
 }
 
-func ServiceextinfoFields() (arr []string) {
+func (h *Serviceextinfo) Fields() (arr []string) {
 
-	h := &serviceextinfo{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.serviceextinfo).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.serviceextinfo).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -47,9 +45,9 @@ func ServiceextinfoFields() (arr []string) {
 	return arr
 }
 
-func ServiceextinfoFieldsJson() (s string) {
+func (h Serviceextinfo) FieldsJson() (s string) {
 
-	f := ServiceextinfoFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -62,7 +60,7 @@ func ServiceextinfoFieldsJson() (s string) {
 	return s
 }
 
-func (h *Serviceextinfo) FilterServiceextinfo(filter string) {
+func (h *Serviceextinfo) filterServiceextinfo(filter string) {
 
 	f := NewFilter(filter)
 
@@ -99,10 +97,13 @@ func (h *Serviceextinfo) FilterServiceextinfo(filter string) {
 	h.serviceextinfo = newh
 }
 
-func (h Serviceextinfo) ShowServiceextinfoJson(newline, brief bool, filter string) {
+func (h Serviceextinfo) Show(brief bool, filter string) {
+}
+
+func (h Serviceextinfo) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServiceextinfo(filter)
+		h.filterServiceextinfo(filter)
 	}
 
 	var nl = ""   // newline
@@ -139,14 +140,14 @@ func (h Serviceextinfo) ShowServiceextinfoJson(newline, brief bool, filter strin
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServiceextinfo() Serviceextinfo {
-	return Serviceextinfo{}
+func NewNrcServiceextinfo() *Serviceextinfo {
+	return &Serviceextinfo{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Serviceextinfo) GetServiceextinfo(url, endpoint, folder, data string) (e error) {
+func (h *Serviceextinfo) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -248,7 +249,7 @@ func (h *Serviceextinfo) GetServiceextinfo(url, endpoint, folder, data string) (
 /*
  * Send HTTP POST request
  */
-func (h Serviceextinfo) PostServiceextinfo(url, endpoint, folder, data string) (e error) {
+func (h Serviceextinfo) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

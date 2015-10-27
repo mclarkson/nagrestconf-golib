@@ -23,17 +23,15 @@ type Commands struct {
 	commands []command
 }
 
-func CommandsRequiredFields() []string {
+func (h Commands) RequiredFields() []string {
 	return []string{"name", "command"}
 }
 
-func CommandsFields() (arr []string) {
+func (h *Commands) Fields() (arr []string) {
 
-	h := &command{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.commands).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.commands).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -42,9 +40,9 @@ func CommandsFields() (arr []string) {
 	return arr
 }
 
-func CommandsFieldsJson() (s string) {
+func (h Commands) FieldsJson() (s string) {
 
-	f := CommandsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -57,7 +55,7 @@ func CommandsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Commands) FilterCommands(filter string) {
+func (h *Commands) filterCommands(filter string) {
 
 	f := NewFilter(filter)
 
@@ -94,10 +92,13 @@ func (h *Commands) FilterCommands(filter string) {
 	h.commands = newh
 }
 
-func (h Commands) ShowCommandsJson(newline, brief bool, filter string) {
+func (h Commands) Show(brief bool, filter string) {
+}
+
+func (h Commands) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterCommands(filter)
+		h.filterCommands(filter)
 	}
 
 	var nl = ""   // newline
@@ -134,14 +135,14 @@ func (h Commands) ShowCommandsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcCommands() Commands {
-	return Commands{}
+func NewNrcCommands() *Commands {
+	return &Commands{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Commands) GetCommands(url, endpoint, folder, data string) (e error) {
+func (h *Commands) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -233,7 +234,7 @@ func (h *Commands) GetCommands(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Commands) PostCommands(url, endpoint, folder, data string) (e error) {
+func (h Commands) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

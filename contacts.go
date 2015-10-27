@@ -44,17 +44,15 @@ type Contacts struct {
 	contacts []contact
 }
 
-func ContactsRequiredFields() []string {
+func (h Contacts) RequiredFields() []string {
 	return []string{"name", "alias", "svcnotifperiod", "svcnotifopts", "svcnotifcmds", "hstnotifperiod", "hstnotifopts", "hstnotifcmds"}
 }
 
-func ContactsFields() (arr []string) {
+func (h *Contacts) Fields() (arr []string) {
 
-	h := &contact{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.contacts).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.contacts).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -63,9 +61,9 @@ func ContactsFields() (arr []string) {
 	return arr
 }
 
-func ContactsFieldsJson() (s string) {
+func (h Contacts) FieldsJson() (s string) {
 
-	f := ContactsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -78,7 +76,7 @@ func ContactsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Contacts) FilterContacts(filter string) {
+func (h *Contacts) filterContacts(filter string) {
 
 	f := NewFilter(filter)
 
@@ -115,10 +113,13 @@ func (h *Contacts) FilterContacts(filter string) {
 	h.contacts = newh
 }
 
-func (h Contacts) ShowContactsJson(newline, brief bool, filter string) {
+func (h Contacts) Show(brief bool, filter string) {
+}
+
+func (h Contacts) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterContacts(filter)
+		h.filterContacts(filter)
 	}
 
 	var nl = ""   // newline
@@ -155,14 +156,14 @@ func (h Contacts) ShowContactsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcContacts() Contacts {
-	return Contacts{}
+func NewNrcContacts() *Contacts {
+	return &Contacts{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Contacts) GetContacts(url, endpoint, folder, data string) (e error) {
+func (h *Contacts) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -296,7 +297,7 @@ func (h *Contacts) GetContacts(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Contacts) PostContacts(url, endpoint, folder, data string) (e error) {
+func (h Contacts) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

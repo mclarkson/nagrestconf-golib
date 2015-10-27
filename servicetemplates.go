@@ -63,17 +63,15 @@ type Servicetemplates struct {
 	servicetemplates []servicetemplate
 }
 
-func ServicetemplatesRequiredFields() []string {
+func (h Servicetemplates) RequiredFields() []string {
 	return []string{"name", "checkinterval", "retryinterval", "notifinterval", "notifperiod", "checkperiod", "maxcheckattempts"}
 }
 
-func ServicetemplatesFields() (arr []string) {
+func (h *Servicetemplates) Fields() (arr []string) {
 
-	h := &servicetemplate{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.servicetemplates).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.servicetemplates).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -82,9 +80,9 @@ func ServicetemplatesFields() (arr []string) {
 	return arr
 }
 
-func ServicetemplatesFieldsJson() (s string) {
+func (h Servicetemplates) FieldsJson() (s string) {
 
-	f := ServicetemplatesFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -97,7 +95,7 @@ func ServicetemplatesFieldsJson() (s string) {
 	return s
 }
 
-func (h *Servicetemplates) FilterServicetemplates(filter string) {
+func (h *Servicetemplates) filterServicetemplates(filter string) {
 
 	f := NewFilter(filter)
 
@@ -134,10 +132,13 @@ func (h *Servicetemplates) FilterServicetemplates(filter string) {
 	h.servicetemplates = newh
 }
 
-func (h Servicetemplates) ShowServicetemplatesJson(newline, brief bool, filter string) {
+func (h Servicetemplates) Show(brief bool, filter string) {
+}
+
+func (h Servicetemplates) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServicetemplates(filter)
+		h.filterServicetemplates(filter)
 	}
 
 	var nl = ""   // newline
@@ -174,14 +175,14 @@ func (h Servicetemplates) ShowServicetemplatesJson(newline, brief bool, filter s
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServicetemplates() Servicetemplates {
-	return Servicetemplates{}
+func NewNrcServicetemplates() *Servicetemplates {
+	return &Servicetemplates{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Servicetemplates) GetServicetemplates(url, endpoint, folder, data string) (e error) {
+func (h *Servicetemplates) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -353,7 +354,7 @@ func (h *Servicetemplates) GetServicetemplates(url, endpoint, folder, data strin
 /*
  * Send HTTP POST request
  */
-func (h Servicetemplates) PostServicetemplates(url, endpoint, folder, data string) (e error) {
+func (h Servicetemplates) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

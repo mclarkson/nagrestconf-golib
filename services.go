@@ -66,17 +66,15 @@ type Services struct {
 	services []service
 }
 
-func ServicesRequiredFields() []string {
+func (h Services) RequiredFields() []string {
 	return []string{"name", "template", "command", "svcdesc"}
 }
 
-func ServicesFields() (arr []string) {
+func (h *Services) Fields() (arr []string) {
 
-	h := &service{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.services).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.services).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -85,9 +83,9 @@ func ServicesFields() (arr []string) {
 	return arr
 }
 
-func ServicesFieldsJson() (s string) {
+func (h Services) FieldsJson() (s string) {
 
-	f := ServicesFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -100,7 +98,7 @@ func ServicesFieldsJson() (s string) {
 	return s
 }
 
-func (h *Services) FilterServices(filter string) {
+func (h *Services) filterServices(filter string) {
 
 	f := NewFilter(filter)
 
@@ -137,10 +135,13 @@ func (h *Services) FilterServices(filter string) {
 	h.services = newh
 }
 
-func (h Services) ShowServicesJson(newline, brief bool, filter string) {
+func (h Services) Show(brief bool, filter string) {
+}
+
+func (h Services) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServices(filter)
+		h.filterServices(filter)
 	}
 
 	var nl = ""   // newline
@@ -177,14 +178,14 @@ func (h Services) ShowServicesJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServices() Services {
-	return Services{}
+func NewNrcServices() *Services {
+	return &Services{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Services) GetServices(url, endpoint, folder, data string) (e error) {
+func (h *Services) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -362,7 +363,7 @@ func (h *Services) GetServices(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Services) PostServices(url, endpoint, folder, data string) (e error) {
+func (h Services) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

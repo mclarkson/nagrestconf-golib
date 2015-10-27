@@ -28,17 +28,15 @@ type Servicegroups struct {
 	servicegroups []servicegroup
 }
 
-func ServicegroupsRequiredFields() []string {
+func (h Servicegroups) RequiredFields() []string {
 	return []string{"name", "alias"}
 }
 
-func ServicegroupsFields() (arr []string) {
+func (h *Servicegroups) Fields() (arr []string) {
 
-	h := &servicegroup{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.servicegroups).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.servicegroups).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -47,9 +45,9 @@ func ServicegroupsFields() (arr []string) {
 	return arr
 }
 
-func ServicegroupsFieldsJson() (s string) {
+func (h Servicegroups) FieldsJson() (s string) {
 
-	f := ServicegroupsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -62,7 +60,7 @@ func ServicegroupsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Servicegroups) FilterServicegroups(filter string) {
+func (h *Servicegroups) filterServicegroups(filter string) {
 
 	f := NewFilter(filter)
 
@@ -99,10 +97,13 @@ func (h *Servicegroups) FilterServicegroups(filter string) {
 	h.servicegroups = newh
 }
 
-func (h Servicegroups) ShowServicegroupsJson(newline, brief bool, filter string) {
+func (h Servicegroups) Show(brief bool, filter string) {
+}
+
+func (h Servicegroups) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServicegroups(filter)
+		h.filterServicegroups(filter)
 	}
 
 	var nl = ""   // newline
@@ -139,14 +140,14 @@ func (h Servicegroups) ShowServicegroupsJson(newline, brief bool, filter string)
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServicegroups() Servicegroups {
-	return Servicegroups{}
+func NewNrcServicegroups() *Servicegroups {
+	return &Servicegroups{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Servicegroups) GetServicegroups(url, endpoint, folder, data string) (e error) {
+func (h *Servicegroups) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -248,7 +249,7 @@ func (h *Servicegroups) GetServicegroups(url, endpoint, folder, data string) (e 
 /*
  * Send HTTP POST request
  */
-func (h Servicegroups) PostServicegroups(url, endpoint, folder, data string) (e error) {
+func (h Servicegroups) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

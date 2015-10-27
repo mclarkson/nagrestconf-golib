@@ -24,17 +24,15 @@ type Contactgroups struct {
 	contactgroups []contactgroup
 }
 
-func ContactgroupsRequiredFields() []string {
+func (h Contactgroups) RequiredFields() []string {
 	return []string{"name", "alias", "members"}
 }
 
-func ContactgroupsFields() (arr []string) {
+func (h *Contactgroups) Fields() (arr []string) {
 
-	h := &contactgroup{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.contactgroups).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.contactgroups).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -43,9 +41,9 @@ func ContactgroupsFields() (arr []string) {
 	return arr
 }
 
-func ContactgroupsFieldsJson() (s string) {
+func (h Contactgroups) FieldsJson() (s string) {
 
-	f := ContactgroupsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -58,7 +56,7 @@ func ContactgroupsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Contactgroups) FilterContactgroups(filter string) {
+func (h *Contactgroups) filterContactgroups(filter string) {
 
 	f := NewFilter(filter)
 
@@ -95,10 +93,13 @@ func (h *Contactgroups) FilterContactgroups(filter string) {
 	h.contactgroups = newh
 }
 
-func (h Contactgroups) ShowContactgroupsJson(newline, brief bool, filter string) {
+func (h Contactgroups) Show(brief bool, filter string) {
+}
+
+func (h Contactgroups) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterContactgroups(filter)
+		h.filterContactgroups(filter)
 	}
 
 	var nl = ""   // newline
@@ -135,14 +136,14 @@ func (h Contactgroups) ShowContactgroupsJson(newline, brief bool, filter string)
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcContactgroups() Contactgroups {
-	return Contactgroups{}
+func NewNrcContactgroups() *Contactgroups {
+	return &Contactgroups{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Contactgroups) GetContactgroups(url, endpoint, folder, data string) (e error) {
+func (h *Contactgroups) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -236,7 +237,7 @@ func (h *Contactgroups) GetContactgroups(url, endpoint, folder, data string) (e 
 /*
  * Send HTTP POST request
  */
-func (h Contactgroups) PostContactgroups(url, endpoint, folder, data string) (e error) {
+func (h Contactgroups) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

@@ -29,17 +29,15 @@ type Hostdeps struct {
 	hostdeps []hostdep
 }
 
-func HostdepsRequiredFields() []string {
+func (h Hostdeps) RequiredFields() []string {
 	return []string{}
 }
 
-func HostdepsFields() (arr []string) {
+func (h *Hostdeps) Fields() (arr []string) {
 
-	h := &hostdep{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.hostdeps).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.hostdeps).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -48,9 +46,9 @@ func HostdepsFields() (arr []string) {
 	return arr
 }
 
-func HostdepsFieldsJson() (s string) {
+func (h Hostdeps) FieldsJson() (s string) {
 
-	f := HostdepsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -63,7 +61,7 @@ func HostdepsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Hostdeps) FilterHostdeps(filter string) {
+func (h *Hostdeps) filterHostdeps(filter string) {
 
 	f := NewFilter(filter)
 
@@ -100,10 +98,13 @@ func (h *Hostdeps) FilterHostdeps(filter string) {
 	h.hostdeps = newh
 }
 
-func (h Hostdeps) ShowHostdepsJson(newline, brief bool, filter string) {
+func (h Hostdeps) Show(brief bool, filter string) {
+}
+
+func (h Hostdeps) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterHostdeps(filter)
+		h.filterHostdeps(filter)
 	}
 
 	var nl = ""   // newline
@@ -140,14 +141,14 @@ func (h Hostdeps) ShowHostdepsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHostdeps() Hostdeps {
-	return Hostdeps{}
+func NewNrcHostdeps() *Hostdeps {
+	return &Hostdeps{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Hostdeps) GetHostdeps(url, endpoint, folder, data string) (e error) {
+func (h *Hostdeps) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -251,7 +252,7 @@ func (h *Hostdeps) GetHostdeps(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Hostdeps) PostHostdeps(url, endpoint, folder, data string) (e error) {
+func (h Hostdeps) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

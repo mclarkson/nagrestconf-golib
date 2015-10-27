@@ -31,17 +31,15 @@ type Servicedeps struct {
 	servicedeps []servicedep
 }
 
-func ServicedepsRequiredFields() []string {
+func (h Servicedeps) RequiredFields() []string {
 	return []string{}
 }
 
-func ServicedepsFields() (arr []string) {
+func (h *Servicedeps) Fields() (arr []string) {
 
-	h := &servicedep{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.servicedeps).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.servicedeps).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -50,9 +48,9 @@ func ServicedepsFields() (arr []string) {
 	return arr
 }
 
-func ServicedepsFieldsJson() (s string) {
+func (h Servicedeps) FieldsJson() (s string) {
 
-	f := ServicedepsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -65,7 +63,7 @@ func ServicedepsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Servicedeps) FilterServicedeps(filter string) {
+func (h *Servicedeps) filterServicedeps(filter string) {
 
 	f := NewFilter(filter)
 
@@ -102,10 +100,13 @@ func (h *Servicedeps) FilterServicedeps(filter string) {
 	h.servicedeps = newh
 }
 
-func (h Servicedeps) ShowServicedepsJson(newline, brief bool, filter string) {
+func (h Servicedeps) Show(brief bool, filter string) {
+}
+
+func (h Servicedeps) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServicedeps(filter)
+		h.filterServicedeps(filter)
 	}
 
 	var nl = ""   // newline
@@ -142,14 +143,14 @@ func (h Servicedeps) ShowServicedepsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServicedeps() Servicedeps {
-	return Servicedeps{}
+func NewNrcServicedeps() *Servicedeps {
+	return &Servicedeps{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Servicedeps) GetServicedeps(url, endpoint, folder, data string) (e error) {
+func (h *Servicedeps) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -257,7 +258,7 @@ func (h *Servicedeps) GetServicedeps(url, endpoint, folder, data string) (e erro
 /*
  * Send HTTP POST request
  */
-func (h Servicedeps) PostServicedeps(url, endpoint, folder, data string) (e error) {
+func (h Servicedeps) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

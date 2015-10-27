@@ -31,17 +31,15 @@ type Hostextinfo struct {
 	hostextinfo []hostextinfo
 }
 
-func HostextinfoRequiredFields() []string {
+func (h Hostextinfo) RequiredFields() []string {
 	return []string{}
 }
 
-func HostextinfoFields() (arr []string) {
+func (h *Hostextinfo) Fields() (arr []string) {
 
-	h := &hostextinfo{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.hostextinfo).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.hostextinfo).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -50,9 +48,9 @@ func HostextinfoFields() (arr []string) {
 	return arr
 }
 
-func HostextinfoFieldsJson() (s string) {
+func (h Hostextinfo) FieldsJson() (s string) {
 
-	f := HostextinfoFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -65,7 +63,7 @@ func HostextinfoFieldsJson() (s string) {
 	return s
 }
 
-func (h *Hostextinfo) FilterHostextinfo(filter string) {
+func (h *Hostextinfo) filterHostextinfo(filter string) {
 
 	f := NewFilter(filter)
 
@@ -102,10 +100,13 @@ func (h *Hostextinfo) FilterHostextinfo(filter string) {
 	h.hostextinfo = newh
 }
 
-func (h Hostextinfo) ShowHostextinfoJson(newline, brief bool, filter string) {
+func (h Hostextinfo) Show(brief bool, filter string) {
+}
+
+func (h Hostextinfo) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterHostextinfo(filter)
+		h.filterHostextinfo(filter)
 	}
 
 	var nl = ""   // newline
@@ -142,14 +143,14 @@ func (h Hostextinfo) ShowHostextinfoJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHostextinfo() Hostextinfo {
-	return Hostextinfo{}
+func NewNrcHostextinfo() *Hostextinfo {
+	return &Hostextinfo{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Hostextinfo) GetHostextinfo(url, endpoint, folder, data string) (e error) {
+func (h *Hostextinfo) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -257,7 +258,7 @@ func (h *Hostextinfo) GetHostextinfo(url, endpoint, folder, data string) (e erro
 /*
  * Send HTTP POST request
  */
-func (h Hostextinfo) PostHostextinfo(url, endpoint, folder, data string) (e error) {
+func (h Hostextinfo) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

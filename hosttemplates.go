@@ -59,17 +59,15 @@ type Hosttemplates struct {
 	hosttemplates []hosttemplate
 }
 
-func HosttemplatesRequiredFields() []string {
+func (h Hosttemplates) RequiredFields() []string {
 	return []string{"name", "checkinterval", "retryinterval", "notifperiod", "checkperiod", "maxcheckattempts", "notifinterval"}
 }
 
-func HosttemplatesFields() (arr []string) {
+func (h *Hosttemplates) Fields() (arr []string) {
 
-	h := &hosttemplate{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.hosttemplates).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.hosttemplates).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -78,9 +76,9 @@ func HosttemplatesFields() (arr []string) {
 	return arr
 }
 
-func HosttemplatesFieldsJson() (s string) {
+func (h Hosttemplates) FieldsJson() (s string) {
 
-	f := HosttemplatesFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -93,7 +91,7 @@ func HosttemplatesFieldsJson() (s string) {
 	return s
 }
 
-func (h *Hosttemplates) FilterHosttemplates(filter string) {
+func (h *Hosttemplates) filterHosttemplates(filter string) {
 
 	f := NewFilter(filter)
 
@@ -130,10 +128,13 @@ func (h *Hosttemplates) FilterHosttemplates(filter string) {
 	h.hosttemplates = newh
 }
 
-func (h Hosttemplates) ShowHosttemplatesJson(newline, brief bool, filter string) {
+func (h Hosttemplates) Show(brief bool, filter string) {
+}
+
+func (h Hosttemplates) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterHosttemplates(filter)
+		h.filterHosttemplates(filter)
 	}
 
 	var nl = ""   // newline
@@ -170,14 +171,14 @@ func (h Hosttemplates) ShowHosttemplatesJson(newline, brief bool, filter string)
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHosttemplates() Hosttemplates {
-	return Hosttemplates{}
+func NewNrcHosttemplates() *Hosttemplates {
+	return &Hosttemplates{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Hosttemplates) GetHosttemplates(url, endpoint, folder, data string) (e error) {
+func (h *Hosttemplates) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -341,7 +342,7 @@ func (h *Hosttemplates) GetHosttemplates(url, endpoint, folder, data string) (e 
 /*
  * Send HTTP POST request
  */
-func (h Hosttemplates) PostHosttemplates(url, endpoint, folder, data string) (e error) {
+func (h Hosttemplates) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

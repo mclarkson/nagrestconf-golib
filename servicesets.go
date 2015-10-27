@@ -66,17 +66,15 @@ type Servicesets struct {
 	servicesets []serviceset
 }
 
-func ServicesetsRequiredFields() []string {
+func (h Servicesets) RequiredFields() []string {
 	return []string{"name", "template", "command", "svcdesc"}
 }
 
-func ServicesetsFields() (arr []string) {
+func (h *Servicesets) Fields() (arr []string) {
 
-	h := &serviceset{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.servicesets).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.servicesets).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -85,9 +83,9 @@ func ServicesetsFields() (arr []string) {
 	return arr
 }
 
-func ServicesetsFieldsJson() (s string) {
+func (h Servicesets) FieldsJson() (s string) {
 
-	f := ServicesetsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -100,7 +98,7 @@ func ServicesetsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Servicesets) FilterServicesets(filter string) {
+func (h *Servicesets) filterServicesets(filter string) {
 
 	f := NewFilter(filter)
 
@@ -137,10 +135,13 @@ func (h *Servicesets) FilterServicesets(filter string) {
 	h.servicesets = newh
 }
 
-func (h Servicesets) ShowServicesetsJson(newline, brief bool, filter string) {
+func (h Servicesets) Show(brief bool, filter string) {
+}
+
+func (h Servicesets) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterServicesets(filter)
+		h.filterServicesets(filter)
 	}
 
 	var nl = ""   // newline
@@ -177,14 +178,14 @@ func (h Servicesets) ShowServicesetsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcServicesets() Servicesets {
-	return Servicesets{}
+func NewNrcServicesets() *Servicesets {
+	return &Servicesets{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Servicesets) GetServicesets(url, endpoint, folder, data string) (e error) {
+func (h *Servicesets) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -362,7 +363,7 @@ func (h *Servicesets) GetServicesets(url, endpoint, folder, data string) (e erro
 /*
  * Send HTTP POST request
  */
-func (h Servicesets) PostServicesets(url, endpoint, folder, data string) (e error) {
+func (h Servicesets) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

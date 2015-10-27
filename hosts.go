@@ -67,17 +67,15 @@ type Hosts struct {
 	hosts []host
 }
 
-func HostsRequiredFields() []string {
+func (h Hosts) RequiredFields() []string {
 	return []string{"name", "alias", "ipaddress", "template"}
 }
 
-func HostsFields() (arr []string) {
+func (h *Hosts) Fields() (arr []string) {
 
-	h := &host{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.hosts).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.hosts).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -86,9 +84,9 @@ func HostsFields() (arr []string) {
 	return arr
 }
 
-func HostsFieldsJson() (s string) {
+func (h Hosts) FieldsJson() (s string) {
 
-	f := HostsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -101,7 +99,7 @@ func HostsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Hosts) FilterHosts(filter string) {
+func (h *Hosts) filterHosts(filter string) {
 
 	f := NewFilter(filter)
 
@@ -138,10 +136,13 @@ func (h *Hosts) FilterHosts(filter string) {
 	h.hosts = newh
 }
 
-func (h Hosts) ShowHostsJson(newline, brief bool, filter string) {
+func (h Hosts) Show(brief bool, filter string) {
+}
+
+func (h Hosts) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterHosts(filter)
+		h.filterHosts(filter)
 	}
 
 	var nl = ""   // newline
@@ -178,14 +179,14 @@ func (h Hosts) ShowHostsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHosts() Hosts {
-	return Hosts{}
+func NewNrcHosts() *Hosts {
+	return &Hosts{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Hosts) GetHosts(url, endpoint, folder, data string) (e error) {
+func (h *Hosts) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -365,7 +366,7 @@ func (h *Hosts) GetHosts(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Hosts) PostHosts(url, endpoint, folder, data string) (e error) {
+func (h Hosts) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

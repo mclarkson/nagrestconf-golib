@@ -30,17 +30,15 @@ type Hostesc struct {
 	hostesc []hostesc
 }
 
-func HostescRequiredFields() []string {
+func (h Hostesc) RequiredFields() []string {
 	return []string{}
 }
 
-func HostescFields() (arr []string) {
+func (h *Hostesc) Fields() (arr []string) {
 
-	h := &hostesc{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.hostesc).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.hostesc).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -49,9 +47,9 @@ func HostescFields() (arr []string) {
 	return arr
 }
 
-func HostescFieldsJson() (s string) {
+func (h Hostesc) FieldsJson() (s string) {
 
-	f := HostescFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -64,7 +62,7 @@ func HostescFieldsJson() (s string) {
 	return s
 }
 
-func (h *Hostesc) FilterHostesc(filter string) {
+func (h *Hostesc) filterHostesc(filter string) {
 
 	f := NewFilter(filter)
 
@@ -101,10 +99,13 @@ func (h *Hostesc) FilterHostesc(filter string) {
 	h.hostesc = newh
 }
 
-func (h Hostesc) ShowHostescJson(newline, brief bool, filter string) {
+func (h Hostesc) Show(brief bool, filter string) {
+}
+
+func (h Hostesc) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterHostesc(filter)
+		h.filterHostesc(filter)
 	}
 
 	var nl = ""   // newline
@@ -141,14 +142,14 @@ func (h Hostesc) ShowHostescJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHostesc() Hostesc {
-	return Hostesc{}
+func NewNrcHostesc() *Hostesc {
+	return &Hostesc{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Hostesc) GetHostesc(url, endpoint, folder, data string) (e error) {
+func (h *Hostesc) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -254,7 +255,7 @@ func (h *Hostesc) GetHostesc(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Hostesc) PostHostesc(url, endpoint, folder, data string) (e error) {
+func (h Hostesc) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

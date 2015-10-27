@@ -28,17 +28,15 @@ type Hostgroups struct {
 	hostgroups []hostgroup
 }
 
-func HostgroupsRequiredFields() []string {
+func (h Hostgroups) RequiredFields() []string {
 	return []string{"name", "alias"}
 }
 
-func HostgroupsFields() (arr []string) {
+func (h *Hostgroups) Fields() (arr []string) {
 
-	h := &hostgroup{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.hostgroups).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.hostgroups).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -47,9 +45,9 @@ func HostgroupsFields() (arr []string) {
 	return arr
 }
 
-func HostgroupsFieldsJson() (s string) {
+func (h Hostgroups) FieldsJson() (s string) {
 
-	f := HostgroupsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -62,7 +60,7 @@ func HostgroupsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Hostgroups) FilterHostgroups(filter string) {
+func (h *Hostgroups) filterHostgroups(filter string) {
 
 	f := NewFilter(filter)
 
@@ -99,10 +97,13 @@ func (h *Hostgroups) FilterHostgroups(filter string) {
 	h.hostgroups = newh
 }
 
-func (h Hostgroups) ShowHostgroupsJson(newline, brief bool, filter string) {
+func (h Hostgroups) Show(brief bool, filter string) {
+}
+
+func (h Hostgroups) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterHostgroups(filter)
+		h.filterHostgroups(filter)
 	}
 
 	var nl = ""   // newline
@@ -139,14 +140,14 @@ func (h Hostgroups) ShowHostgroupsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHostgroups() Hostgroups {
-	return Hostgroups{}
+func NewNrcHostgroups() *Hostgroups {
+	return &Hostgroups{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Hostgroups) GetHostgroups(url, endpoint, folder, data string) (e error) {
+func (h *Hostgroups) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -248,7 +249,7 @@ func (h *Hostgroups) GetHostgroups(url, endpoint, folder, data string) (e error)
 /*
  * Send HTTP POST request
  */
-func (h Hostgroups) PostHostgroups(url, endpoint, folder, data string) (e error) {
+func (h Hostgroups) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

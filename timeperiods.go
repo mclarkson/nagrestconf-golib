@@ -26,17 +26,15 @@ type Timeperiods struct {
 	timeperiods []timeperiod
 }
 
-func TimeperiodsRequiredFields() []string {
+func (h Timeperiods) RequiredFields() []string {
 	return []string{"name", "alias"}
 }
 
-func TimeperiodsFields() (arr []string) {
+func (h *Timeperiods) Fields() (arr []string) {
 
-	h := &timeperiod{}
-
-	n := reflect.TypeOf(h).Elem().NumField()
+	n := reflect.TypeOf(h.timeperiods).Elem().NumField()
 	for i := 0; i < n; i++ {
-		f := reflect.TypeOf(h).Elem().Field(i)
+		f := reflect.TypeOf(h.timeperiods).Elem().Field(i)
 		arr = append(arr, f.Name)
 	}
 
@@ -45,9 +43,9 @@ func TimeperiodsFields() (arr []string) {
 	return arr
 }
 
-func TimeperiodsFieldsJson() (s string) {
+func (h Timeperiods) FieldsJson() (s string) {
 
-	f := TimeperiodsFields()
+	f := h.Fields()
 
 	s = "["
 	c := ""
@@ -60,7 +58,7 @@ func TimeperiodsFieldsJson() (s string) {
 	return s
 }
 
-func (h *Timeperiods) FilterTimeperiods(filter string) {
+func (h *Timeperiods) filterTimeperiods(filter string) {
 
 	f := NewFilter(filter)
 
@@ -97,10 +95,13 @@ func (h *Timeperiods) FilterTimeperiods(filter string) {
 	h.timeperiods = newh
 }
 
-func (h Timeperiods) ShowTimeperiodsJson(newline, brief bool, filter string) {
+func (h Timeperiods) Show(brief bool, filter string) {
+}
+
+func (h Timeperiods) ShowJson(newline, brief bool, filter string) {
 
 	if filter != "" {
-		h.FilterTimeperiods(filter)
+		h.filterTimeperiods(filter)
 	}
 
 	var nl = ""   // newline
@@ -137,14 +138,14 @@ func (h Timeperiods) ShowTimeperiodsJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcTimeperiods() Timeperiods {
-	return Timeperiods{}
+func NewNrcTimeperiods() *Timeperiods {
+	return &Timeperiods{}
 }
 
 /*
  * Send HTTP GET request
  */
-func (h *Timeperiods) GetTimeperiods(url, endpoint, folder, data string) (e error) {
+func (h *Timeperiods) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -242,7 +243,7 @@ func (h *Timeperiods) GetTimeperiods(url, endpoint, folder, data string) (e erro
 /*
  * Send HTTP POST request
  */
-func (h Timeperiods) PostTimeperiods(url, endpoint, folder, data string) (e error) {
+func (h Timeperiods) Post(url, endpoint, folder, data string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")
