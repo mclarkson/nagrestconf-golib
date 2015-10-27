@@ -31,11 +31,11 @@ type Servicedeps struct {
 	servicedeps []servicedep
 }
 
-func (h Servicedeps) RequiredFields() []string {
+func (h Servicedeps) RequiredOptions() []string {
 	return []string{}
 }
 
-func (h *Servicedeps) Fields() (arr []string) {
+func (h *Servicedeps) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.servicedeps).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -48,9 +48,9 @@ func (h *Servicedeps) Fields() (arr []string) {
 	return arr
 }
 
-func (h Servicedeps) FieldsJson() (s string) {
+func (h Servicedeps) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

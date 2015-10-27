@@ -63,11 +63,11 @@ type Servicetemplates struct {
 	servicetemplates []servicetemplate
 }
 
-func (h Servicetemplates) RequiredFields() []string {
+func (h Servicetemplates) RequiredOptions() []string {
 	return []string{"name", "checkinterval", "retryinterval", "notifinterval", "notifperiod", "checkperiod", "maxcheckattempts"}
 }
 
-func (h *Servicetemplates) Fields() (arr []string) {
+func (h *Servicetemplates) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.servicetemplates).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -80,9 +80,9 @@ func (h *Servicetemplates) Fields() (arr []string) {
 	return arr
 }
 
-func (h Servicetemplates) FieldsJson() (s string) {
+func (h Servicetemplates) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

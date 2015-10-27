@@ -29,11 +29,11 @@ type Hostdeps struct {
 	hostdeps []hostdep
 }
 
-func (h Hostdeps) RequiredFields() []string {
+func (h Hostdeps) RequiredOptions() []string {
 	return []string{}
 }
 
-func (h *Hostdeps) Fields() (arr []string) {
+func (h *Hostdeps) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.hostdeps).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -46,9 +46,9 @@ func (h *Hostdeps) Fields() (arr []string) {
 	return arr
 }
 
-func (h Hostdeps) FieldsJson() (s string) {
+func (h Hostdeps) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

@@ -18,9 +18,9 @@ func (e HttpError) Error() string {
 }
 
 type NrcQuery interface {
-	RequiredFields() []string
-	Fields() []string
-	FieldsJson() string
+	RequiredOptions() []string
+	Options() []string
+	OptionsJson() string
 	Show(bool, string)
 	ShowJson(bool, bool, string)
 	Get(string, string, string, string) error

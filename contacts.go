@@ -44,11 +44,11 @@ type Contacts struct {
 	contacts []contact
 }
 
-func (h Contacts) RequiredFields() []string {
+func (h Contacts) RequiredOptions() []string {
 	return []string{"name", "alias", "svcnotifperiod", "svcnotifopts", "svcnotifcmds", "hstnotifperiod", "hstnotifopts", "hstnotifcmds"}
 }
 
-func (h *Contacts) Fields() (arr []string) {
+func (h *Contacts) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.contacts).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -61,9 +61,9 @@ func (h *Contacts) Fields() (arr []string) {
 	return arr
 }
 
-func (h Contacts) FieldsJson() (s string) {
+func (h Contacts) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

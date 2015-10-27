@@ -31,11 +31,11 @@ type Hostextinfo struct {
 	hostextinfo []hostextinfo
 }
 
-func (h Hostextinfo) RequiredFields() []string {
+func (h Hostextinfo) RequiredOptions() []string {
 	return []string{}
 }
 
-func (h *Hostextinfo) Fields() (arr []string) {
+func (h *Hostextinfo) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.hostextinfo).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -48,9 +48,9 @@ func (h *Hostextinfo) Fields() (arr []string) {
 	return arr
 }
 
-func (h Hostextinfo) FieldsJson() (s string) {
+func (h Hostextinfo) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

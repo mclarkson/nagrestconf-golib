@@ -28,11 +28,11 @@ type Hostgroups struct {
 	hostgroups []hostgroup
 }
 
-func (h Hostgroups) RequiredFields() []string {
+func (h Hostgroups) RequiredOptions() []string {
 	return []string{"name", "alias"}
 }
 
-func (h *Hostgroups) Fields() (arr []string) {
+func (h *Hostgroups) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.hostgroups).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -45,9 +45,9 @@ func (h *Hostgroups) Fields() (arr []string) {
 	return arr
 }
 
-func (h Hostgroups) FieldsJson() (s string) {
+func (h Hostgroups) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

@@ -59,11 +59,11 @@ type Hosttemplates struct {
 	hosttemplates []hosttemplate
 }
 
-func (h Hosttemplates) RequiredFields() []string {
+func (h Hosttemplates) RequiredOptions() []string {
 	return []string{"name", "checkinterval", "retryinterval", "notifperiod", "checkperiod", "maxcheckattempts", "notifinterval"}
 }
 
-func (h *Hosttemplates) Fields() (arr []string) {
+func (h *Hosttemplates) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.hosttemplates).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -76,9 +76,9 @@ func (h *Hosttemplates) Fields() (arr []string) {
 	return arr
 }
 
-func (h Hosttemplates) FieldsJson() (s string) {
+func (h Hosttemplates) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

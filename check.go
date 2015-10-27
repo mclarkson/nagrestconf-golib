@@ -9,27 +9,27 @@ import (
 	"strings"
 )
 
-type output struct {
+type check struct {
 	Output []string
 }
 
-func NewNrcCheck() *output {
-	return &output{}
+func NewNrcCheck() *check {
+	return &check{}
 }
 
-func (o output) RequiredFields() []string {
+func (c check) RequiredOptions() []string {
 	return []string{}
 }
 
-func (o *output) Fields() (arr []string) {
-	return arr
+func (c *check) Options() (arr []string) {
+	return []string{"verbose"}
 }
 
-func (o output) FieldsJson() (s string) {
+func (c check) OptionsJson() (s string) {
 	return s
 }
 
-func (o output) ShowJson(newline, brief bool, filter string) {
+func (c check) ShowJson(newline, brief bool, filter string) {
 
 	var nl = ""   // newline
 	var ind4 = "" // big indent
@@ -41,7 +41,7 @@ func (o output) ShowJson(newline, brief bool, filter string) {
 
 	comma := ""
 	fmt.Printf("[")
-	for _, j := range o.Output {
+	for _, j := range c.Output {
 		e := new(jsonEncode)
 		e.string(j)
 		fmt.Printf("%s%s%s%s",
@@ -51,9 +51,9 @@ func (o output) ShowJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func (o output) Show(brief bool, filter string) {
+func (c check) Show(brief bool, filter string) {
 
-	for _, j := range o.Output {
+	for _, j := range c.Output {
 		fmt.Printf("%s\n", j)
 	}
 }
@@ -61,7 +61,7 @@ func (o output) Show(brief bool, filter string) {
 /*
  * Send HTTP GET request
  */
-func (o *output) Get(url, endpoint, folder, data string) (e error) {
+func (c *check) Get(url, endpoint, folder, data string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -118,7 +118,7 @@ func (o *output) Get(url, endpoint, folder, data string) (e error) {
 
 	} else {
 
-		if err := json.Unmarshal(body, &o.Output); err != nil {
+		if err := json.Unmarshal(body, &c.Output); err != nil {
 			txt := fmt.Sprintf("Status (%d) Error decoding JSON (%s).",
 				resp.StatusCode, err.Error())
 			return HttpError{txt}
@@ -128,6 +128,6 @@ func (o *output) Get(url, endpoint, folder, data string) (e error) {
 	}
 }
 
-func (o output) Post(url, endpoint, folder, data string) (e error) {
+func (c check) Post(url, endpoint, folder, data string) (e error) {
 	return nil
 }

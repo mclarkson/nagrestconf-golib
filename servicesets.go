@@ -66,11 +66,11 @@ type Servicesets struct {
 	servicesets []serviceset
 }
 
-func (h Servicesets) RequiredFields() []string {
+func (h Servicesets) RequiredOptions() []string {
 	return []string{"name", "template", "command", "svcdesc"}
 }
 
-func (h *Servicesets) Fields() (arr []string) {
+func (h *Servicesets) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.servicesets).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -83,9 +83,9 @@ func (h *Servicesets) Fields() (arr []string) {
 	return arr
 }
 
-func (h Servicesets) FieldsJson() (s string) {
+func (h Servicesets) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

@@ -23,11 +23,11 @@ type Commands struct {
 	commands []command
 }
 
-func (h Commands) RequiredFields() []string {
+func (h Commands) RequiredOptions() []string {
 	return []string{"name", "command"}
 }
 
-func (h *Commands) Fields() (arr []string) {
+func (h *Commands) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.commands).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -40,9 +40,9 @@ func (h *Commands) Fields() (arr []string) {
 	return arr
 }
 
-func (h Commands) FieldsJson() (s string) {
+func (h Commands) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

@@ -24,11 +24,11 @@ type Contactgroups struct {
 	contactgroups []contactgroup
 }
 
-func (h Contactgroups) RequiredFields() []string {
+func (h Contactgroups) RequiredOptions() []string {
 	return []string{"name", "alias", "members"}
 }
 
-func (h *Contactgroups) Fields() (arr []string) {
+func (h *Contactgroups) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.contactgroups).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -41,9 +41,9 @@ func (h *Contactgroups) Fields() (arr []string) {
 	return arr
 }
 
-func (h Contactgroups) FieldsJson() (s string) {
+func (h Contactgroups) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

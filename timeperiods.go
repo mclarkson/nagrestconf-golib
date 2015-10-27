@@ -26,11 +26,11 @@ type Timeperiods struct {
 	timeperiods []timeperiod
 }
 
-func (h Timeperiods) RequiredFields() []string {
+func (h Timeperiods) RequiredOptions() []string {
 	return []string{"name", "alias"}
 }
 
-func (h *Timeperiods) Fields() (arr []string) {
+func (h *Timeperiods) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.timeperiods).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -43,9 +43,9 @@ func (h *Timeperiods) Fields() (arr []string) {
 	return arr
 }
 
-func (h Timeperiods) FieldsJson() (s string) {
+func (h Timeperiods) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

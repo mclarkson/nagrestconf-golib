@@ -31,11 +31,11 @@ type Serviceesc struct {
 	serviceesc []serviceesc
 }
 
-func (h Serviceesc) RequiredFields() []string {
+func (h Serviceesc) RequiredOptions() []string {
 	return []string{}
 }
 
-func (h *Serviceesc) Fields() (arr []string) {
+func (h *Serviceesc) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.serviceesc).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -48,9 +48,9 @@ func (h *Serviceesc) Fields() (arr []string) {
 	return arr
 }
 
-func (h Serviceesc) FieldsJson() (s string) {
+func (h Serviceesc) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

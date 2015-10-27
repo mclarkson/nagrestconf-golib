@@ -28,11 +28,11 @@ type Servicegroups struct {
 	servicegroups []servicegroup
 }
 
-func (h Servicegroups) RequiredFields() []string {
+func (h Servicegroups) RequiredOptions() []string {
 	return []string{"name", "alias"}
 }
 
-func (h *Servicegroups) Fields() (arr []string) {
+func (h *Servicegroups) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.servicegroups).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -45,9 +45,9 @@ func (h *Servicegroups) Fields() (arr []string) {
 	return arr
 }
 
-func (h Servicegroups) FieldsJson() (s string) {
+func (h Servicegroups) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

@@ -30,11 +30,11 @@ type Hostesc struct {
 	hostesc []hostesc
 }
 
-func (h Hostesc) RequiredFields() []string {
+func (h Hostesc) RequiredOptions() []string {
 	return []string{}
 }
 
-func (h *Hostesc) Fields() (arr []string) {
+func (h *Hostesc) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.hostesc).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -47,9 +47,9 @@ func (h *Hostesc) Fields() (arr []string) {
 	return arr
 }
 
-func (h Hostesc) FieldsJson() (s string) {
+func (h Hostesc) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

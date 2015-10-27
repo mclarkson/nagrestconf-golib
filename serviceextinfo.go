@@ -28,11 +28,11 @@ type Serviceextinfo struct {
 	serviceextinfo []serviceextinfo
 }
 
-func (h Serviceextinfo) RequiredFields() []string {
+func (h Serviceextinfo) RequiredOptions() []string {
 	return []string{}
 }
 
-func (h *Serviceextinfo) Fields() (arr []string) {
+func (h *Serviceextinfo) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.serviceextinfo).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -45,9 +45,9 @@ func (h *Serviceextinfo) Fields() (arr []string) {
 	return arr
 }
 
-func (h Serviceextinfo) FieldsJson() (s string) {
+func (h Serviceextinfo) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""

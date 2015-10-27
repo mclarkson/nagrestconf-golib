@@ -67,11 +67,11 @@ type Hosts struct {
 	hosts []host
 }
 
-func (h Hosts) RequiredFields() []string {
+func (h Hosts) RequiredOptions() []string {
 	return []string{"name", "alias", "ipaddress", "template"}
 }
 
-func (h *Hosts) Fields() (arr []string) {
+func (h *Hosts) Options() (arr []string) {
 
 	n := reflect.TypeOf(h.hosts).Elem().NumField()
 	for i := 0; i < n; i++ {
@@ -84,9 +84,9 @@ func (h *Hosts) Fields() (arr []string) {
 	return arr
 }
 
-func (h Hosts) FieldsJson() (s string) {
+func (h Hosts) OptionsJson() (s string) {
 
-	f := h.Fields()
+	f := h.Options()
 
 	s = "["
 	c := ""
