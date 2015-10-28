@@ -1,11 +1,10 @@
 package nrc
 
 import (
-	//"fmt"
 	"strings"
 )
 
-func FormatData(data, table string) (string, error) {
+func FormatData(data []string, table string) (string, error) {
 
 	// data string: host:asdf,ipaddress:1.2.3.4
 	// to: "host":"asdf","ipaddress":"1.2.3.4"
@@ -22,30 +21,28 @@ func FormatData(data, table string) (string, error) {
 	returnString := ""
 	comma := ""
 
-	if len(data) > 0 {
-		splitdata := strings.Split(data, ",")
-		for _, j := range splitdata {
-			split := strings.SplitN(j, ":", 2)
-			if len(split) < 2 {
-				return "", HttpError{}
-			}
-			var encode = false
-			// check whether field should be encoded
-			for _, i := range m[table] {
-				if i == split[0] {
-					encode = true
-				}
-			}
-			if encode == false {
-				returnString += comma + `"` + split[0] + `":"`
-				returnString += split[1] + `"`
-			} else {
-				returnString += comma + `"` + split[0] + `":"`
-				returnString += UrlEncodeForce(split[1]) + `"`
-				//fmt.Println("Urlencoding")
-			}
-			comma = ","
+	for _, j := range data {
+		split := strings.SplitN(j, ":", 2)
+		if len(split) < 2 {
+			return "", HttpError{}
 		}
+		var encode = false
+		// check whether field should be encoded
+		for _, i := range m[table] {
+			if i == split[0] {
+				encode = true
+			}
+		}
+		if encode == false {
+			returnString += comma + `"` + split[0] + `":"`
+			returnString += split[1] + `"`
+		} else {
+			returnString += comma + `"` + split[0] + `":"`
+			val := strings.Replace(split[1], `"`, `\"`, -1)
+			val = UrlEncodeForce(val)
+			returnString += val + `"`
+		}
+		comma = ","
 	}
 
 	return returnString, nil

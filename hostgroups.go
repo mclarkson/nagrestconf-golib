@@ -98,6 +98,27 @@ func (h *Hostgroups) filterHostgroups(filter string) {
 }
 
 func (h Hostgroups) Show(brief bool, filter string) {
+
+	if filter != "" {
+		h.filterHostgroups(filter)
+	}
+
+	var ind4 = "    " // big indent
+
+	fmt.Printf("\n")
+	for _, r := range h.hostgroups {
+		t := &r // Reflection is only allowed on ptr or interface
+		n := reflect.TypeOf(t).Elem().NumField()
+		for i := 0; i < n; i++ {
+			f := reflect.TypeOf(t).Elem().Field(i)
+			g := reflect.ValueOf(t).Elem().Field(i)
+			if brief == true || (brief == false && g.String() != "") {
+				fmt.Printf("%s%s:%s\n",
+					ind4, f.Name, g)
+			}
+		}
+		fmt.Printf("\n")
+	}
 }
 
 func (h Hostgroups) ShowJson(newline, brief bool, filter string) {
@@ -147,7 +168,7 @@ func NewNrcHostgroups() *Hostgroups {
 /*
  * Send HTTP GET request
  */
-func (h *Hostgroups) Get(url, endpoint, folder, data string) (e error) {
+func (h *Hostgroups) Get(url, endpoint, folder string, data []string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -249,7 +270,7 @@ func (h *Hostgroups) Get(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Hostgroups) Post(url, endpoint, folder, data string) (e error) {
+func (h Hostgroups) Post(url, endpoint, folder string, data []string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

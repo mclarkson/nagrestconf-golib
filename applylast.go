@@ -9,39 +9,39 @@ import (
 	"strings"
 )
 
-type restart struct {
+type lastgood struct {
 }
 
-func (r restart) RequiredOptions() []string {
+func (r lastgood) RequiredOptions() []string {
 	return []string{}
 }
 
-func (r *restart) Options() (arr []string) {
-	return []string{"verbose"}
+func (r *lastgood) Options() []string {
+	return []string{}
 }
 
-func (r restart) OptionsJson() (s string) {
+func (r lastgood) OptionsJson() (s string) {
 	return s
 }
 
-func (r restart) Show(brief bool, filter string) {
+func (r lastgood) Show(brief bool, filter string) {
 }
 
-func (r restart) ShowJson(newline, brief bool, filter string) {
+func (r lastgood) ShowJson(newline, brief bool, filter string) {
 }
 
-func NewNrcRestart() *restart {
-	return &restart{}
+func NewNrcLastGood() *lastgood {
+	return &lastgood{}
 }
 
-func (r restart) Get(url, endpoint, folder string, data []string) (e error) {
+func (r lastgood) Get(url, endpoint, folder string, data []string) (e error) {
 	return nil
 }
 
 /*
  * Send HTTP POST request
  */
-func (r restart) Post(url, endpoint, folder string, data []string) (e error) {
+func (r lastgood) Post(url, endpoint, folder string, data []string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

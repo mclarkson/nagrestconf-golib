@@ -137,6 +137,27 @@ func (h *Hosts) filterHosts(filter string) {
 }
 
 func (h Hosts) Show(brief bool, filter string) {
+
+	if filter != "" {
+		h.filterHosts(filter)
+	}
+
+	var ind4 = "    " // big indent
+
+	fmt.Printf("\n")
+	for _, r := range h.hosts {
+		t := &r // Reflection is only allowed on ptr or interface
+		n := reflect.TypeOf(t).Elem().NumField()
+		for i := 0; i < n; i++ {
+			f := reflect.TypeOf(t).Elem().Field(i)
+			g := reflect.ValueOf(t).Elem().Field(i)
+			if brief == true || (brief == false && g.String() != "") {
+				fmt.Printf("%s%s:%s\n",
+					ind4, f.Name, g)
+			}
+		}
+		fmt.Printf("\n")
+	}
 }
 
 func (h Hosts) ShowJson(newline, brief bool, filter string) {
@@ -186,7 +207,7 @@ func NewNrcHosts() *Hosts {
 /*
  * Send HTTP GET request
  */
-func (h *Hosts) Get(url, endpoint, folder, data string) (e error) {
+func (h *Hosts) Get(url, endpoint, folder string, data []string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -366,7 +387,7 @@ func (h *Hosts) Get(url, endpoint, folder, data string) (e error) {
 /*
  * Send HTTP POST request
  */
-func (h Hosts) Post(url, endpoint, folder, data string) (e error) {
+func (h Hosts) Post(url, endpoint, folder string, data []string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")

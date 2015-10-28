@@ -23,6 +23,6 @@ type NrcQuery interface {
 	OptionsJson() string
 	Show(bool, string)
 	ShowJson(bool, bool, string)
-	Get(string, string, string, string) error
-	Post(string, string, string, string) error
+	Get(string, string, string, []string) error
+	Post(string, string, string, []string) error
 }

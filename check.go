@@ -61,7 +61,7 @@ func (c check) Show(brief bool, filter string) {
 /*
  * Send HTTP GET request
  */
-func (c *check) Get(url, endpoint, folder, data string) (e error) {
+func (c *check) Get(url, endpoint, folder string, data []string) (e error) {
 
 	// accept bad certs
 	tr := &http.Transport{
@@ -128,6 +128,6 @@ func (c *check) Get(url, endpoint, folder, data string) (e error) {
 	}
 }
 
-func (c check) Post(url, endpoint, folder, data string) (e error) {
+func (c check) Post(url, endpoint, folder string, data []string) (e error) {
 	return nil
 }

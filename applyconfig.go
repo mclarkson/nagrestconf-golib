@@ -3,45 +3,70 @@ package nrc
 import (
 	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-type restart struct {
+type applyconfig struct {
+	Output []string
 }
 
-func (r restart) RequiredOptions() []string {
+func (r applyconfig) RequiredOptions() []string {
 	return []string{}
 }
 
-func (r *restart) Options() (arr []string) {
+func (r *applyconfig) Options() (arr []string) {
 	return []string{"verbose"}
 }
 
-func (r restart) OptionsJson() (s string) {
+func (r applyconfig) OptionsJson() (s string) {
 	return s
 }
 
-func (r restart) Show(brief bool, filter string) {
+func (r applyconfig) ShowJson(newline, brief bool, filter string) {
+
+	var nl = ""   // newline
+	var ind4 = "" // big indent
+
+	if newline == false {
+		nl = "\n"
+		ind4 = "    "
+	}
+
+	comma := ""
+	fmt.Printf("[")
+	for _, j := range r.Output {
+		e := new(jsonEncode)
+		e.string(j)
+		fmt.Printf("%s%s%s%s",
+			comma, nl, ind4, e.String())
+		comma = ","
+	}
+	fmt.Printf("%s]\n", nl)
 }
 
-func (r restart) ShowJson(newline, brief bool, filter string) {
+func (r applyconfig) Show(brief bool, filter string) {
+
+	for _, j := range r.Output {
+		fmt.Printf("%s\n", j)
+	}
 }
 
-func NewNrcRestart() *restart {
-	return &restart{}
+func NewNrcApplyConfig() *applyconfig {
+	return &applyconfig{}
 }
 
-func (r restart) Get(url, endpoint, folder string, data []string) (e error) {
+func (r applyconfig) Get(url, endpoint, folder string, data []string) (e error) {
 	return nil
 }
 
 /*
  * Send HTTP POST request
  */
-func (r restart) Post(url, endpoint, folder string, data []string) (e error) {
+func (r *applyconfig) Post(url, endpoint, folder string, data []string) (e error) {
 
 	for strings.HasSuffix(url, "/") {
 		url = strings.TrimSuffix(url, "/")
@@ -99,6 +124,15 @@ func (r restart) Post(url, endpoint, folder string, data []string) (e error) {
 		txt := fmt.Sprintf("Status (%d): %s", resp.StatusCode, response)
 		return HttpError{txt}
 
+	} else {
+
+		if err := json.Unmarshal(body, &r.Output); err != nil {
+			txt := fmt.Sprintf("Status (%d) Error decoding JSON (%s).",
+				resp.StatusCode, err.Error())
+			return HttpError{txt}
+		}
+
+		return nil
 	}
 
 	// If we get here then it was a success
