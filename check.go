@@ -10,11 +10,16 @@ import (
 )
 
 type check struct {
-	Output []string
+	Output   []string
+	username string
+	password string
 }
 
-func NewNrcCheck() *check {
-	return &check{}
+func NewNrcCheck(username, password string) *check {
+	r := &check{}
+	r.username = username
+	r.password = password
+	return r
 }
 
 func (c check) RequiredOptions() []string {
@@ -94,7 +99,12 @@ func (c *check) Get(url, endpoint, folder string, data []string) (e error) {
 	//fmt.Printf("URL=%s\n", fullUrl)
 
 	//fmt.Printf("%s\n", url+"/"+endpoint)
-	resp, err := client.Get(fullUrl)
+	//resp, err := client.Get(fullUrl)
+	req, err := http.NewRequest("GET", fullUrl, nil)
+	if len(c.username) > 0 {
+		req.SetBasicAuth(c.username, c.password)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		txt := fmt.Sprintf("Could not send REST request ('%s').", err.Error())
 		return HttpError{txt}

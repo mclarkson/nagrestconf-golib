@@ -64,7 +64,9 @@ type host struct {
 }
 
 type Hosts struct {
-	hosts []host
+	hosts    []host
+	username string
+	password string
 }
 
 func (h Hosts) RequiredOptions() []string {
@@ -200,8 +202,11 @@ func (h Hosts) ShowJson(newline, brief bool, filter string) {
 	fmt.Printf("%s]\n", nl)
 }
 
-func NewNrcHosts() *Hosts {
-	return &Hosts{}
+func NewNrcHosts(username, password string) *Hosts {
+	h := &Hosts{}
+	h.username = username
+	h.password = password
+	return h
 }
 
 /*
@@ -240,7 +245,12 @@ func (h *Hosts) Get(url, endpoint, folder string, data []string) (e error) {
 	//fmt.Printf("URL=%s\n", fullUrl)
 
 	//fmt.Printf("%s\n", url+"/"+endpoint)
-	resp, err := client.Get(fullUrl)
+	//resp, err := client.Get(fullUrl)
+	req, err := http.NewRequest("GET", fullUrl, nil)
+	if len(h.username) > 0 {
+		req.SetBasicAuth(h.username, h.password)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		txt := fmt.Sprintf("Could not send REST request ('%s').", err.Error())
 		return HttpError{txt}
@@ -423,7 +433,13 @@ func (h Hosts) Post(url, endpoint, folder string, data []string) (e error) {
 	}
 	client := &http.Client{Transport: tr}
 
-	resp, err := client.Post(fullUrl, "application/x-www-form-urlencoded", buf)
+	//resp, err := client.Post(fullUrl, "application/x-www-form-urlencoded", buf)
+	req, err := http.NewRequest("POST", fullUrl, buf)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	if len(h.username) > 0 {
+		req.SetBasicAuth(h.username, h.password)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		txt := fmt.Sprintf("Could not send REST request ('%s').", err.Error())
 		return HttpError{txt}

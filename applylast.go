@@ -10,6 +10,8 @@ import (
 )
 
 type lastgood struct {
+	username string
+	password string
 }
 
 func (r lastgood) RequiredOptions() []string {
@@ -30,8 +32,11 @@ func (r lastgood) Show(brief bool, filter string) {
 func (r lastgood) ShowJson(newline, brief bool, filter string) {
 }
 
-func NewNrcLastGood() *lastgood {
-	return &lastgood{}
+func NewNrcLastGood(username, password string) *lastgood {
+	r := &lastgood{}
+	r.username = username
+	r.password = password
+	return r
 }
 
 func (r lastgood) Get(url, endpoint, folder string, data []string) (e error) {
@@ -77,7 +82,13 @@ func (r lastgood) Post(url, endpoint, folder string, data []string) (e error) {
 	}
 	client := &http.Client{Transport: tr}
 
-	resp, err := client.Post(fullUrl, "application/x-www-form-urlencoded", buf)
+	//resp, err := client.Post(fullUrl, "application/x-www-form-urlencoded", buf)
+	req, err := http.NewRequest("POST", fullUrl, buf)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	if len(r.username) > 0 {
+		req.SetBasicAuth(r.username, r.password)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		txt := fmt.Sprintf("Could not send REST request ('%s').", err.Error())
 		return HttpError{txt}
