@@ -11,7 +11,7 @@ func FormatData(data []string, table string) (string, error) {
 
 	m := make(map[string][]string)
 
-	m["hosts"] = []string{"command"}
+	m["hosts"] = []string{"command", "alias"}
 	m["services"] = []string{"name", "command", "svcdesc"}
 	m["servicesets"] = []string{"name", "command", "svcdesc"}
 	m["hosttemplates"] = []string{"checkcommand", "action_url"}
