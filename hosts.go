@@ -293,7 +293,7 @@ func (h *Hosts) Get(url, endpoint, folder string, data []string) (e error) {
 					case "name":
 						host.name = v.(string)
 					case "alias":
-						host.alias = v.(string)
+						host.alias, _ = UrlDecode(v.(string))
 					case "ipaddress":
 						host.ipaddress = v.(string)
 					case "template":
