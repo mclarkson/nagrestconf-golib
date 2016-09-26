@@ -32,7 +32,7 @@ hosts="
         icon_image_alt vrml_image statusmap_image coords2d coords3d action_url
         customvars
 "
-hosts_encode="command"
+hosts_encode="command alias"
 hosts_required="name alias ipaddress template"
 
 services="
@@ -74,6 +74,7 @@ hosttemplates="
         processperfdata retainstatusinfo retainnonstatusinfo firstnotifdelay
         notifications_enabled stalkingoptions notes notes_url icon_image
         icon_image_alt vrml_image statusmap_image coords2d coords3d action_url
+        customvars
 "
 hosttemplates_encode="checkcommand action_url"
 hosttemplates_required="name checkinterval retryinterval notifperiod checkperiod maxcheckattempts notifinterval"

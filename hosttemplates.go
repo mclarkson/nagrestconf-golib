@@ -53,6 +53,7 @@ type hosttemplate struct {
 	coords2d              string
 	coords3d              string
 	action_url            string
+	customvars            string
 }
 
 type Hosttemplates struct {
@@ -360,6 +361,8 @@ func (h *Hosttemplates) Get(url, endpoint, folder string, data []string) (e erro
 						hosttemplate.coords3d = v.(string)
 					case "action_url":
 						hosttemplate.action_url, _ = UrlDecode(v.(string))
+					case "customvars":
+						hosttemplate.customvars = v.(string)
 					}
 				}
 			}
